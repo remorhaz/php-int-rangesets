@@ -1,0 +1,7 @@
+/vendor/
+/build/
+/composer.lock
+/phpunit.xml
+/psalm.xml
+/infection.json
+.phpunit.result.cache

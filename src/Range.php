@@ -1,0 +1,95 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Remorhaz\IntRangeSets;
+
+/**
+ * Non-empty range of integers.
+ */
+final class Range implements RangeInterface
+{
+
+    /**
+     * @var int
+     */
+    private $start;
+
+    /**
+     * @var int
+     */
+    private $finish;
+
+    /**
+     * @param int      $start  First value of the range.
+     * @param int|null $finish Last value of the range. If null than equals first value, otherwise must be greater or
+     *                         equal than first value.
+     * @throws Exception\InvalidRangeException
+     */
+    public function __construct(int $start, ?int $finish = null)
+    {
+        if (!isset($finish)) {
+            $finish = $start;
+        } elseif ($finish < $start) {
+            throw new Exception\InvalidRangeException($start, $finish);
+        }
+
+        $this->start = $start;
+        $this->finish = $finish;
+    }
+
+    public function getStart(): int
+    {
+        return $this->start;
+    }
+
+    public function getFinish(): int
+    {
+        return $this->finish;
+    }
+
+    public function getLength(): int
+    {
+        return $this->finish - $this->start + 1;
+    }
+
+    public function equals(RangeInterface $range): bool
+    {
+        return $range->getStart() == $this->start && $range->getFinish() == $this->finish;
+    }
+
+    public function containsValue(int $value): bool
+    {
+        return $this->start <= $value && $value <= $this->finish;
+    }
+
+    public function contains(RangeInterface $range): bool
+    {
+        return $range->getStart() >= $this->start && $range->getFinish() <= $this->finish;
+    }
+
+    public function intersects(RangeInterface $range): bool
+    {
+        return $this->finish >= $range->getStart() && $range->getFinish() >= $this->start;
+    }
+
+    public function follows(RangeInterface $range): bool
+    {
+        return $this->start == $range->getFinish() + 1;
+    }
+
+    public function asRangeSet(): RangeSetInterface
+    {
+        return RangeSet::createUnsafe($this);
+    }
+
+    public function withStart(int $value): RangeInterface
+    {
+        return new self($value, $this->finish);
+    }
+
+    public function withFinish(int $value): RangeInterface
+    {
+        return new self($this->start, $value);
+    }
+}
