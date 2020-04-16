@@ -59,7 +59,8 @@ use Remorhaz\IntRangeSets\RangeSet;
 // Empty range set
 $rangeSet1 = new RangeSet();
 
-// Two overlapping ranges [3..5] and [4..10] are added to empty set, creating a new set with single range [3..10]
+// Two overlapping ranges [3..5] and [4..10] are added to empty set,
+// creating a new set with single range [3..10]
 $rangeSet2 = $rangeSet1->withRanges(new Range(3, 5), new Range(4, 10));
 ``` 
 
