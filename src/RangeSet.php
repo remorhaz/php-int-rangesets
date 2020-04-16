@@ -7,6 +7,7 @@ namespace Remorhaz\IntRangeSets;
 use Generator;
 
 use function array_search;
+use function count;
 use function usort;
 
 /**
@@ -171,6 +172,22 @@ final class RangeSet implements RangeSetInterface
         }
 
         return self::createUnsafe(...$resultRanges);
+    }
+
+    public function equals(RangeSetInterface $rangeSet): bool
+    {
+        $ranges = $rangeSet->getRanges();
+        if (count($this->ranges) != count($ranges)) {
+            return false;
+        }
+
+        foreach ($this->ranges as $index => $range) {
+            if (!$ranges[$index]->equals($range)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

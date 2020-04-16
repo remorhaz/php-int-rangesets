@@ -43,6 +43,14 @@ interface RangeSetInterface
     public function createIntersection(RangeSetInterface $rangeSet): RangeSetInterface;
 
     /**
+     * Returns TRUE if both sets contain same ranges.
+     *
+     * @param RangeSetInterface $rangeSet
+     * @return bool
+     */
+    public function equals(RangeSetInterface $rangeSet): bool;
+
+    /**
      * Returns list of ranges contained in set.
      *
      * @return RangeInterface[]
