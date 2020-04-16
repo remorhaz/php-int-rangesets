@@ -1,6 +1,7 @@
 # Integer Range Sets
 [![Latest Stable Version](https://poser.pugx.org/remorhaz/int-rangesets/v/stable)](https://packagist.org/packages/remorhaz/int-rangesets)
 [![Build Status](https://travis-ci.com/remorhaz/php-int-rangesets.svg?branch=master)](https://travis-ci.com/remorhaz/php-int-rangesets)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/remorhaz/php-int-rangesets/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/remorhaz/php-int-rangesets/?branch=master)
 [![codecov](https://codecov.io/gh/remorhaz/php-int-rangesets/branch/master/graph/badge.svg)](https://codecov.io/gh/remorhaz/php-int-rangesets)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fremorhaz%2Fphp-int-rangesets%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/remorhaz/php-int-rangesets/master)
 [![License](https://poser.pugx.org/remorhaz/int-rangesets/license)](https://packagist.org/packages/remorhaz/int-rangesets)
