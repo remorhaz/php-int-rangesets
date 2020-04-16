@@ -162,6 +162,8 @@ class RangeSetTest extends TestCase
                 [[[2, 5], [7, 10]], [[1, 13]], [[2, 5], [7, 10]]],
             "Range partially intersects with two existing ranges" =>
                 [[[2, 5], [7, 10]], [[3, 7]], [[3, 5], [7]]],
+            'Second range from first range partially intersects with first range from second range' =>
+                [[[1], [3, 4]], [[2, 4]], [[3, 4]]],
         ];
     }
 

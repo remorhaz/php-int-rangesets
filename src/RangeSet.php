@@ -154,6 +154,7 @@ final class RangeSet implements RangeSetInterface
         foreach ($this->createRangePicker($this->ranges, $rangeSet->getRanges()) as $pickedRange) {
             if (isset($rangeBuffer)) {
                 if (!$rangeBuffer->intersects($pickedRange)) {
+                    $rangeBuffer = $pickedRange;
                     continue;
                 }
                 $pickedRangeStart = $pickedRange->getStart();
