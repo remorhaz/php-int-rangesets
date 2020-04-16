@@ -1,4 +1,6 @@
 # Integer Range Sets
+[![Latest Stable Version](https://poser.pugx.org/remorhaz/int-rangesets/v/stable)](https://packagist.org/packages/remorhaz/int-rangesets)
+[![License](https://poser.pugx.org/remorhaz/int-rangesets/license)](https://packagist.org/packages/remorhaz/int-rangesets)
 
 This small library allows manipulating integer sets.
 
