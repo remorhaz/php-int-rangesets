@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Remorhaz\IntRangeSets;
 
+use Generator;
+
 use function array_search;
 use function usort;
 
@@ -74,7 +76,7 @@ final class RangeSet implements RangeSetInterface
 
     private function mergeRanges(RangeInterface ...$ranges): RangeSetInterface
     {
-        $mergedRanges = [];
+        $resultRanges = [];
         /** @var RangeInterface|null $rangeBuffer */
         $rangeBuffer = null;
         foreach ($this->createRangePicker($this->ranges, $ranges) as $pickedRange) {
@@ -86,20 +88,20 @@ final class RangeSet implements RangeSetInterface
                     $rangeBuffer = $pickedRange->withStart($rangeBuffer->getStart());
                     continue;
                 }
-                $mergedRanges[] = $rangeBuffer;
+                $resultRanges[] = $rangeBuffer;
             }
             $rangeBuffer = $pickedRange;
         }
         if (isset($rangeBuffer)) {
-            $mergedRanges[] = $rangeBuffer;
+            $resultRanges[] = $rangeBuffer;
         }
 
-        return self::createUnsafe(...$mergedRanges);
+        return self::createUnsafe(...$resultRanges);
     }
 
     public function createSymmetricDifference(RangeSetInterface $rangeSet): RangeSetInterface
     {
-        $xoredRanges = [];
+        $resultRanges = [];
         /** @var RangeInterface|null $rangeBuffer */
         $rangeBuffer = null;
         foreach ($this->createRangePicker($this->ranges, $rangeSet->getRanges()) as $pickedRange) {
@@ -107,7 +109,7 @@ final class RangeSet implements RangeSetInterface
                 if ($rangeBuffer->intersects($pickedRange)) {
                     $pickedRangeStart = $pickedRange->getStart();
                     if ($rangeBuffer->getStart() < $pickedRangeStart) {
-                        $xoredRanges[] = $rangeBuffer->withFinish($pickedRangeStart - 1);
+                        $resultRanges[] = $rangeBuffer->withFinish($pickedRangeStart - 1);
                         $rangeBuffer = $rangeBuffer->withStart($pickedRangeStart);
                     }
 
@@ -126,15 +128,15 @@ final class RangeSet implements RangeSetInterface
                     $rangeBuffer = $rangeBuffer->withFinish($pickedRange->getFinish());
                     continue;
                 }
-                $xoredRanges[] = $rangeBuffer;
+                $resultRanges[] = $rangeBuffer;
             }
             $rangeBuffer = $pickedRange;
         }
         if (isset($rangeBuffer)) {
-            $xoredRanges[] = $rangeBuffer;
+            $resultRanges[] = $rangeBuffer;
         }
 
-        return self::createUnsafe(...$xoredRanges);
+        return self::createUnsafe(...$resultRanges);
     }
 
     /**
@@ -145,7 +147,7 @@ final class RangeSet implements RangeSetInterface
      */
     public function createIntersection(RangeSetInterface $rangeSet): RangeSetInterface
     {
-        $intersectedRanges = [];
+        $resultRanges = [];
         /** @var RangeInterface|null $rangeBuffer */
         $rangeBuffer = null;
         foreach ($this->createRangePicker($this->ranges, $rangeSet->getRanges()) as $pickedRange) {
@@ -159,24 +161,24 @@ final class RangeSet implements RangeSetInterface
                 }
                 $pickedRangeFinish = $pickedRange->getFinish();
                 if ($rangeBuffer->getFinish() > $pickedRangeFinish) {
-                    $intersectedRanges[] = $rangeBuffer->withFinish($pickedRangeFinish);
+                    $resultRanges[] = $rangeBuffer->withFinish($pickedRangeFinish);
                     $rangeBuffer = $rangeBuffer->withStart($pickedRangeFinish + 1);
                     continue;
                 }
-                $intersectedRanges[] = $rangeBuffer;
+                $resultRanges[] = $rangeBuffer;
             }
             $rangeBuffer = $pickedRange;
         }
 
-        return self::createUnsafe(...$intersectedRanges);
+        return self::createUnsafe(...$resultRanges);
     }
 
     /**
      * @param RangeInterface[] ...$rangeLists
-     * @return RangeInterface[]
-     * @psalm-return iterable<int,RangeInterface>
+     * @return RangeInterface[]|Generator
+     * @psalm-return Generator<int,RangeInterface>
      */
-    private function createRangePicker(array ...$rangeLists): iterable
+    private function createRangePicker(array ...$rangeLists): Generator
     {
         $rangeListKeys = array_keys($rangeLists);
         $indexes = array_fill_keys($rangeListKeys, 0);
