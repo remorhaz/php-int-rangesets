@@ -11,12 +11,12 @@ interface RangeSetInterface
 {
 
     /**
-     * Returns new range set with ranges merged with ranges from another set.
+     * Returns new range set that is a union of current and given sets ($this ∪ $rangeSet).
      *
      * @param RangeSetInterface $rangeSet
      * @return RangeSetInterface
      */
-    public function merge(RangeSetInterface $rangeSet): RangeSetInterface;
+    public function createUnion(RangeSetInterface $rangeSet): RangeSetInterface;
 
     /**
      * Returns new range set with ranges merged with given ranges.
@@ -27,20 +27,20 @@ interface RangeSetInterface
     public function withRanges(RangeInterface ...$ranges): RangeSetInterface;
 
     /**
-     * Returns new range set with XORed ranges, i. e. ranges that exist strictly in one of the sets (but not in both).
+     * Returns new range set that is a symmetric difference of current and given sets ($this ∆ $rangeSet).
      *
      * @param RangeSetInterface $rangeSet
      * @return RangeSetInterface
      */
-    public function xor(RangeSetInterface $rangeSet): RangeSetInterface;
+    public function createSymmetricDifference(RangeSetInterface $rangeSet): RangeSetInterface;
 
     /**
-     * Returns new range set with ANDed ranges, i. e. ranges that exist in both sets.s
+     * Returns new range set that is an intersection of current and gives sets ($this ∩ $rangeSet).
      *
      * @param RangeSetInterface $rangeSet
      * @return RangeSetInterface
      */
-    public function and(RangeSetInterface $rangeSet): RangeSetInterface;
+    public function createIntersection(RangeSetInterface $rangeSet): RangeSetInterface;
 
     /**
      * Returns list of ranges contained in set.

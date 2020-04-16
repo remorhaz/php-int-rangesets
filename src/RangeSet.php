@@ -20,7 +20,7 @@ final class RangeSet implements RangeSetInterface
 
     /**
      * Provided ranges must be sorted, must not overlap and must not follow each other without gaps.
-     * Warning: no checks are made! Use {@see RangeSet::merge()} to create set from arbitrary list of ranges.
+     * Warning: no checks are made! Use {@see RangeSet::createUnion()} to create set from arbitrary list of ranges.
      *
      * @param RangeInterface ...$ranges
      * @return static
@@ -39,7 +39,7 @@ final class RangeSet implements RangeSetInterface
      * @param RangeSetInterface $rangeSet
      * @return RangeSetInterface
      */
-    public function merge(RangeSetInterface $rangeSet): RangeSetInterface
+    public function createUnion(RangeSetInterface $rangeSet): RangeSetInterface
     {
         return $this->mergeRanges(...$rangeSet->getRanges());
     }
@@ -97,7 +97,7 @@ final class RangeSet implements RangeSetInterface
         return self::createUnsafe(...$mergedRanges);
     }
 
-    public function xor(RangeSetInterface $rangeSet): RangeSetInterface
+    public function createSymmetricDifference(RangeSetInterface $rangeSet): RangeSetInterface
     {
         $xoredRanges = [];
         /** @var RangeInterface|null $rangeBuffer */
@@ -143,9 +143,9 @@ final class RangeSet implements RangeSetInterface
      * @param RangeSetInterface $rangeSet
      * @return RangeSetInterface
      */
-    public function and(RangeSetInterface $rangeSet): RangeSetInterface
+    public function createIntersection(RangeSetInterface $rangeSet): RangeSetInterface
     {
-        $andedRanges = [];
+        $intersectedRanges = [];
         /** @var RangeInterface|null $rangeBuffer */
         $rangeBuffer = null;
         foreach ($this->createRangePicker($this->ranges, $rangeSet->getRanges()) as $pickedRange) {
@@ -159,16 +159,16 @@ final class RangeSet implements RangeSetInterface
                 }
                 $pickedRangeFinish = $pickedRange->getFinish();
                 if ($rangeBuffer->getFinish() > $pickedRangeFinish) {
-                    $andedRanges[] = $rangeBuffer->withFinish($pickedRangeFinish);
+                    $intersectedRanges[] = $rangeBuffer->withFinish($pickedRangeFinish);
                     $rangeBuffer = $rangeBuffer->withStart($pickedRangeFinish + 1);
                     continue;
                 }
-                $andedRanges[] = $rangeBuffer;
+                $intersectedRanges[] = $rangeBuffer;
             }
             $rangeBuffer = $pickedRange;
         }
 
-        return self::createUnsafe(...$andedRanges);
+        return self::createUnsafe(...$intersectedRanges);
     }
 
     /**

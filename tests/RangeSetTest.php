@@ -19,8 +19,8 @@ class RangeSetTest extends TestCase
     public function testWithRanges_GivenRangeSet_ReturnsAnotherInstance(): void
     {
         $rangeSet = RangeSet::createUnsafe(...$this->importRanges([1, 3]));
-        $mergedRangeSet = $rangeSet->withRanges(...$this->importRanges([2, 4]));
-        self::assertNotSame($rangeSet, $mergedRangeSet);
+        $newRangeSet = $rangeSet->withRanges(...$this->importRanges([2, 4]));
+        self::assertNotSame($rangeSet, $newRangeSet);
     }
 
     /**
@@ -35,8 +35,8 @@ class RangeSetTest extends TestCase
         array $expectedValue
     ): void {
         $rangeSet = RangeSet::createUnsafe(...$this->importRanges(...$rangeData));
-        $mergedRange = $rangeSet->withRanges(...$this->importRanges(...$rangeDataToMerge));
-        self::assertSame($expectedValue, $this->exportRangeSet($mergedRange));
+        $newRangeSet = $rangeSet->withRanges(...$this->importRanges(...$rangeDataToMerge));
+        self::assertSame($expectedValue, $this->exportRangeSet($newRangeSet));
     }
 
     public function providerMergedRanges(): array
@@ -64,45 +64,47 @@ class RangeSetTest extends TestCase
         ];
     }
 
-    public function testMerge_GivenRangeSetAndRangeSetToMerge_ReturnsMatchingRangeSet(): void
+    public function testCreateUnion_GivenRangeSetAndRangeSetToMerge_ReturnsMatchingRangeSet(): void
     {
         $rangeSet = RangeSet::createUnsafe(...$this->importRanges([1, 3]));
-        $mergedRangeSet = $rangeSet->merge(RangeSet::createUnsafe(...$this->importRanges([2, 4])));
-        self::assertSame([[1, 4]], $this->exportRangeSet($mergedRangeSet));
+        $union = $rangeSet->createUnion(RangeSet::createUnsafe(...$this->importRanges([2, 4])));
+        self::assertSame([[1, 4]], $this->exportRangeSet($union));
     }
 
-    public function testMerge_GivenRangeSet_ReturnsAnotherInstance(): void
+    public function testCreateUnion_GivenRangeSet_ReturnsAnotherInstance(): void
     {
         $rangeSet = RangeSet::createUnsafe(...$this->importRanges([1, 3]));
-        $mergedRangeSet = $rangeSet->merge(RangeSet::createUnsafe(...$this->importRanges([2, 4])));
-        self::assertNotSame($rangeSet, $mergedRangeSet);
+        $union = $rangeSet->createUnion(RangeSet::createUnsafe(...$this->importRanges([2, 4])));
+        self::assertNotSame($rangeSet, $union);
     }
 
-    public function testMerge_GivenRangeSetToMerge_ReturnsAnotherInstance(): void
+    public function testCreateUnion_GivenRangeSetToMerge_ReturnsAnotherInstance(): void
     {
         $rangeSet = RangeSet::createUnsafe(...$this->importRanges([1, 3]));
-        $rangeSetToMerge = RangeSet::createUnsafe(...$this->importRanges([2, 4]));
-        $mergedRangeSet = $rangeSet->merge($rangeSetToMerge);
-        self::assertNotSame($rangeSetToMerge, $mergedRangeSet);
+        $rangeSetToUnite = RangeSet::createUnsafe(...$this->importRanges([2, 4]));
+        $mergedRangeSet = $rangeSet->createUnion($rangeSetToUnite);
+        self::assertNotSame($rangeSetToUnite, $mergedRangeSet);
     }
 
     /**
      * @param int[][] $rangeData
      * @param int[][] $rangeDataToMerge
      * @param int[][] $expectedValue
-     * @dataProvider providerXoredRanges
+     * @dataProvider providerSymmetricDifferenceRanges
      */
-    public function testXor_GivenRangeSetAndRangesToXor_ReturnsMatchingRangeSet(
+    public function testCreateSymmetricDifference_GivenRangeSetAndRangesToXor_ReturnsMatchingRangeSet(
         array $rangeData,
         array $rangeDataToMerge,
         array $expectedValue
     ): void {
         $rangeSet = RangeSet::createUnsafe(...$this->importRanges(...$rangeData));
-        $xoredRange = $rangeSet->xor(RangeSet::createUnsafe(...$this->importRanges(...$rangeDataToMerge)));
-        self::assertSame($expectedValue, $this->exportRangeSet($xoredRange));
+        $symmetricDifference = $rangeSet->createSymmetricDifference(
+            RangeSet::createUnsafe(...$this->importRanges(...$rangeDataToMerge))
+        );
+        self::assertSame($expectedValue, $this->exportRangeSet($symmetricDifference));
     }
 
-    public function providerXoredRanges(): array
+    public function providerSymmetricDifferenceRanges(): array
     {
         return [
             "Empty range" => [[[1, 2]], [], [[1, 2]]],
@@ -125,19 +127,21 @@ class RangeSetTest extends TestCase
      * @param int[][] $rangeData
      * @param int[][] $rangeDataToMerge
      * @param int[][] $expectedValue
-     * @dataProvider providerAndedRanges
+     * @dataProvider providerIntersectionRanges
      */
-    public function testAnd_GivenRangeSetAndRangesToAnd_ReturnsMatchingRangeSet(
+    public function testCreateIntersection_GivenRangeSetAndRangesToAnd_ReturnsMatchingRangeSet(
         array $rangeData,
         array $rangeDataToMerge,
         array $expectedValue
     ): void {
         $rangeSet = RangeSet::createUnsafe(...$this->importRanges(...$rangeData));
-        $xoredRange = $rangeSet->and(RangeSet::createUnsafe(...$this->importRanges(...$rangeDataToMerge)));
-        self::assertSame($expectedValue, $this->exportRangeSet($xoredRange));
+        $intersection = $rangeSet->createIntersection(
+            RangeSet::createUnsafe(...$this->importRanges(...$rangeDataToMerge))
+        );
+        self::assertSame($expectedValue, $this->exportRangeSet($intersection));
     }
 
-    public function providerAndedRanges(): array
+    public function providerIntersectionRanges(): array
     {
         return [
             "Empty range" => [[[1, 2]], [], []],
