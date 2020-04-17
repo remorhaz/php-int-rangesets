@@ -22,7 +22,7 @@ final class RangeSet implements RangeSetInterface
     /**
      * @var RangeInterface[]
      */
-    private $ranges = [];
+    private $ranges;
 
     /**
      * Creates set of ranges that contain all values from given ranges.
@@ -71,7 +71,7 @@ final class RangeSet implements RangeSetInterface
      */
     private static function importRange(array $args): RangeInterface
     {
-        return new Range(...$args);
+        return new Range(/** @scrutinizer ignore-type */ ...$args);
     }
 
     private function __construct(RangeInterface ...$ranges)
