@@ -81,7 +81,7 @@ $rangeSet1 = RangeSet::createUnsafe(new Range(2, 5), new Range(7, 8));
 
 ```
 
-*WARNING:* Operations on non-normalized range sets will return incorrect results! Use `create()` method with arbitrary range lists.
+**WARNING:** Operations on non-normalized range sets will return incorrect results! Use `create()` method with arbitrary range lists.
 
 ### Available operations
 In all examples `$a`, `$b` and `$result` are objects implementing `\Remorhaz\IntRangeSets\RangeSetInterface`.
