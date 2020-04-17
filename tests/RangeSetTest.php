@@ -6,7 +6,6 @@ namespace Remorhaz\IntRangeSets\Test;
 
 use PHPUnit\Framework\TestCase;
 use Remorhaz\IntRangeSets\Range;
-use Remorhaz\IntRangeSets\RangeInterface;
 use Remorhaz\IntRangeSets\RangeSet;
 use Remorhaz\IntRangeSets\RangeSetInterface;
 
@@ -16,10 +15,30 @@ use Remorhaz\IntRangeSets\RangeSetInterface;
 class RangeSetTest extends TestCase
 {
 
+    /**
+     * @param array $rangesData
+     * @param array $expectedValue
+     * @dataProvider providerCreate
+     */
+    public function testCreate_GivenRanges_ReturnsMatchingRangeSet(array $rangesData, array $expectedValue): void
+    {
+        $rangeSet = RangeSet::create(...RangeSet::importRanges(...$rangesData));
+        self::assertSame($expectedValue, $this->exportRangeSet($rangeSet));
+    }
+
+    public function providerCreate(): array
+    {
+        return [
+            'No ranges' => [[], [], []],
+            'Non-overlapping ranges in reversed order' => [[[4, 5], [1, 2]], [[1, 2], [4, 5]]],
+            'Overlapping ranges' => [[[1, 3], [2, 4]], [[1, 4]]],
+        ];
+    }
+
     public function testWithRanges_GivenRangeSet_ReturnsAnotherInstance(): void
     {
-        $rangeSet = RangeSet::createUnsafe(...$this->importRanges([1, 3]));
-        $newRangeSet = $rangeSet->withRanges(...$this->importRanges([2, 4]));
+        $rangeSet = RangeSet::createUnsafe(...RangeSet::importRanges([1, 3]));
+        $newRangeSet = $rangeSet->withRanges(...RangeSet::importRanges([2, 4]));
         self::assertNotSame($rangeSet, $newRangeSet);
     }
 
@@ -34,8 +53,8 @@ class RangeSetTest extends TestCase
         array $rangeDataToMerge,
         array $expectedValue
     ): void {
-        $rangeSet = RangeSet::createUnsafe(...$this->importRanges(...$rangeData));
-        $newRangeSet = $rangeSet->withRanges(...$this->importRanges(...$rangeDataToMerge));
+        $rangeSet = RangeSet::createUnsafe(...RangeSet::importRanges(...$rangeData));
+        $newRangeSet = $rangeSet->withRanges(...RangeSet::importRanges(...$rangeDataToMerge));
         self::assertSame($expectedValue, $this->exportRangeSet($newRangeSet));
     }
 
@@ -66,22 +85,22 @@ class RangeSetTest extends TestCase
 
     public function testCreateUnion_GivenRangeSetAndRangeSetToMerge_ReturnsMatchingRangeSet(): void
     {
-        $rangeSet = RangeSet::createUnsafe(...$this->importRanges([1, 3]));
-        $union = $rangeSet->createUnion(RangeSet::createUnsafe(...$this->importRanges([2, 4])));
+        $rangeSet = RangeSet::createUnsafe(...RangeSet::importRanges([1, 3]));
+        $union = $rangeSet->createUnion(RangeSet::createUnsafe(...RangeSet::importRanges([2, 4])));
         self::assertSame([[1, 4]], $this->exportRangeSet($union));
     }
 
     public function testCreateUnion_GivenRangeSet_ReturnsAnotherInstance(): void
     {
-        $rangeSet = RangeSet::createUnsafe(...$this->importRanges([1, 3]));
-        $union = $rangeSet->createUnion(RangeSet::createUnsafe(...$this->importRanges([2, 4])));
+        $rangeSet = RangeSet::createUnsafe(...RangeSet::importRanges([1, 3]));
+        $union = $rangeSet->createUnion(RangeSet::createUnsafe(...RangeSet::importRanges([2, 4])));
         self::assertNotSame($rangeSet, $union);
     }
 
     public function testCreateUnion_GivenRangeSetToMerge_ReturnsAnotherInstance(): void
     {
-        $rangeSet = RangeSet::createUnsafe(...$this->importRanges([1, 3]));
-        $rangeSetToUnite = RangeSet::createUnsafe(...$this->importRanges([2, 4]));
+        $rangeSet = RangeSet::createUnsafe(...RangeSet::importRanges([1, 3]));
+        $rangeSetToUnite = RangeSet::createUnsafe(...RangeSet::importRanges([2, 4]));
         $mergedRangeSet = $rangeSet->createUnion($rangeSetToUnite);
         self::assertNotSame($rangeSetToUnite, $mergedRangeSet);
     }
@@ -97,9 +116,9 @@ class RangeSetTest extends TestCase
         array $rangeDataToMerge,
         array $expectedValue
     ): void {
-        $rangeSet = RangeSet::createUnsafe(...$this->importRanges(...$rangeData));
+        $rangeSet = RangeSet::createUnsafe(...RangeSet::importRanges(...$rangeData));
         $symmetricDifference = $rangeSet->createSymmetricDifference(
-            RangeSet::createUnsafe(...$this->importRanges(...$rangeDataToMerge))
+            RangeSet::createUnsafe(...RangeSet::importRanges(...$rangeDataToMerge))
         );
         self::assertSame($expectedValue, $this->exportRangeSet($symmetricDifference));
     }
@@ -134,9 +153,9 @@ class RangeSetTest extends TestCase
         array $rangeDataToMerge,
         array $expectedValue
     ): void {
-        $rangeSet = RangeSet::createUnsafe(...$this->importRanges(...$rangeData));
+        $rangeSet = RangeSet::createUnsafe(...RangeSet::importRanges(...$rangeData));
         $intersection = $rangeSet->createIntersection(
-            RangeSet::createUnsafe(...$this->importRanges(...$rangeDataToMerge))
+            RangeSet::createUnsafe(...RangeSet::importRanges(...$rangeDataToMerge))
         );
         self::assertSame($expectedValue, $this->exportRangeSet($intersection));
     }
@@ -148,6 +167,8 @@ class RangeSetTest extends TestCase
             "Empty existing range" => [[], [[1, 2]], []],
             "Same range" => [[[1, 2]], [[1, 2]], [[1, 2]]],
             "Range ends after existing range with matching starts" => [[[1, 2]], [[1, 3]], [[1, 2]]],
+            "Range ends after existing range with matching starts but before next range" =>
+                [[[1, 2], [4, 5]], [[1, 4]], [[1, 2], [4]]],
             "Range ends before existing range with matching starts" => [[[1, 3]], [[1, 2]], [[1, 2]]],
             "Range after existing range" => [[[1, 2]], [[4, 5]], []],
             "Range right after existing range" => [[[1, 2]], [[3, 4]], []],
@@ -169,7 +190,7 @@ class RangeSetTest extends TestCase
 
     public function testIsEmpty_EmptyRange_ReturnsTrue(): void
     {
-        $rangeSet = new RangeSet();
+        $rangeSet = RangeSet::create();
         self::assertTrue($rangeSet->isEmpty());
     }
 
@@ -180,17 +201,44 @@ class RangeSetTest extends TestCase
     }
 
     /**
-     * @param int[] ...$data
-     * @return RangeInterface[]
+     * @param array $firstRangesData
+     * @param array $secondRangesData
+     * @dataProvider providerEqualRanges
      */
-    private function importRanges(array ...$data): array
+    public function testEquals_EqualRanges_ReturnsTrue(array $firstRangesData, array $secondRangesData): void
     {
-        $ranges = [];
-        foreach ($data as $rangeData) {
-            $ranges[] = new Range(...$rangeData);
-        }
+        $firstRangeSet = RangeSet::createUnsafe(...RangeSet::importRanges(...$firstRangesData));
+        $secondRangeSet = RangeSet::createUnsafe(...RangeSet::importRanges(...$secondRangesData));
+        self::assertTrue($firstRangeSet->equals($secondRangeSet));
+    }
 
-        return $ranges;
+    public function providerEqualRanges(): array
+    {
+        return [
+            'Empty range sets' => [[], []],
+            'Range sets with single range' => [[[1, 2]], [[1, 2]]],
+            'Range sets with two ranges' => [[[1, 2], [4, 5]], [[1, 2], [4, 5]]],
+        ];
+    }
+
+    /**
+     * @param array $firstRangesData
+     * @param array $secondRangesData
+     * @dataProvider providerNotEqualRanges
+     */
+    public function testEquals_NotEqualRanges_ReturnsFalse(array $firstRangesData, array $secondRangesData): void
+    {
+        $firstRangeSet = RangeSet::createUnsafe(...RangeSet::importRanges(...$firstRangesData));
+        $secondRangeSet = RangeSet::createUnsafe(...RangeSet::importRanges(...$secondRangesData));
+        self::assertFalse($firstRangeSet->equals($secondRangeSet));
+    }
+
+    public function providerNotEqualRanges(): array
+    {
+        return [
+            'Sets with different amount of ranges' => [[[1, 2], [4, 5]], [[1, 2]]],
+            'Sets with same amount of different ranges' => [[[4, 5]], [[1, 2]]],
+        ];
     }
 
     /**

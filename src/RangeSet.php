@@ -6,12 +6,15 @@ namespace Remorhaz\IntRangeSets;
 
 use Generator;
 
+use function array_map;
 use function array_search;
 use function count;
 use function usort;
 
 /**
  * Immutable set of integer ranges.
+ *
+ * @psalm-immutable
  */
 final class RangeSet implements RangeSetInterface
 {
@@ -22,18 +25,58 @@ final class RangeSet implements RangeSetInterface
     private $ranges = [];
 
     /**
+     * Creates set of ranges that contain all values from given ranges.
+     *
+     * @param RangeInterface ...$ranges
+     * @return RangeSetInterface
+     * @psalm-pure
+     */
+    public static function create(RangeInterface ...$ranges): RangeSetInterface
+    {
+        $rangeSet = new self();
+
+        return $rangeSet->withRanges(...$ranges);
+    }
+
+    /**
      * Provided ranges must be sorted, must not overlap and must not follow each other without gaps.
      * Warning: no checks are made! Use {@see RangeSet::createUnion()} to create set from arbitrary list of ranges.
      *
      * @param RangeInterface ...$ranges
-     * @return static
+     * @return RangeSetInterface
+     * @psalm-pure
      */
-    public static function createUnsafe(RangeInterface ...$ranges): self
+    public static function createUnsafe(RangeInterface ...$ranges): RangeSetInterface
     {
-        $rangeSet = new self();
-        $rangeSet->ranges = $ranges;
+        return new self(...$ranges);
+    }
 
-        return $rangeSet;
+    /**
+     * @param int[] ...$rangeDataList
+     * @return RangeInterface[]
+     * @psalm-pure
+     */
+    public static function importRanges(array ...$rangeDataList): array
+    {
+        /** @var RangeInterface[] $ranges */
+        $ranges = array_map([self::class, 'importRange'], $rangeDataList);
+
+        return $ranges;
+    }
+
+    /**
+     * @param int[] $args
+     * @return RangeInterface
+     * @psalm-pure
+     */
+    private static function importRange(array $args): RangeInterface
+    {
+        return new Range(...$args);
+    }
+
+    private function __construct(RangeInterface ...$ranges)
+    {
+        $this->ranges = $ranges;
     }
 
     /**
@@ -41,6 +84,7 @@ final class RangeSet implements RangeSetInterface
      *
      * @param RangeSetInterface $rangeSet
      * @return RangeSetInterface
+     * @psalm-pure
      */
     public function createUnion(RangeSetInterface $rangeSet): RangeSetInterface
     {
@@ -52,6 +96,7 @@ final class RangeSet implements RangeSetInterface
      *
      * @param RangeInterface ...$ranges
      * @return RangeSetInterface
+     * @psalm-pure
      */
     public function withRanges(RangeInterface ...$ranges): RangeSetInterface
     {
@@ -62,6 +107,7 @@ final class RangeSet implements RangeSetInterface
      * @param RangeInterface ...$ranges
      * @return RangeInterface[]
      * @psalm-return array<int,RangeInterface>
+     * @psalm-pure
      */
     private function getSortedRanges(RangeInterface ...$ranges): array
     {
@@ -70,11 +116,22 @@ final class RangeSet implements RangeSetInterface
         return $ranges;
     }
 
+    /**
+     * @param RangeInterface $firstRange
+     * @param RangeInterface $secondRange
+     * @return int
+     * @psalm-pure
+     */
     private function compareRanges(RangeInterface $firstRange, RangeInterface $secondRange): int
     {
         return $firstRange->getStart() <=> $secondRange->getStart();
     }
 
+    /**
+     * @param RangeInterface ...$ranges
+     * @return RangeSetInterface
+     * @psalm-pure
+     */
     private function mergeRanges(RangeInterface ...$ranges): RangeSetInterface
     {
         $resultRanges = [];
@@ -100,6 +157,11 @@ final class RangeSet implements RangeSetInterface
         return self::createUnsafe(...$resultRanges);
     }
 
+    /**
+     * @param RangeSetInterface $rangeSet
+     * @return RangeSetInterface
+     * @psalm-pure
+     */
     public function createSymmetricDifference(RangeSetInterface $rangeSet): RangeSetInterface
     {
         $resultRanges = [];
@@ -145,6 +207,7 @@ final class RangeSet implements RangeSetInterface
      *
      * @param RangeSetInterface $rangeSet
      * @return RangeSetInterface
+     * @psalm-pure
      */
     public function createIntersection(RangeSetInterface $rangeSet): RangeSetInterface
     {
@@ -175,6 +238,11 @@ final class RangeSet implements RangeSetInterface
         return self::createUnsafe(...$resultRanges);
     }
 
+    /**
+     * @param RangeSetInterface $rangeSet
+     * @return bool
+     * @psalm-pure
+     */
     public function equals(RangeSetInterface $rangeSet): bool
     {
         $ranges = $rangeSet->getRanges();
@@ -195,6 +263,7 @@ final class RangeSet implements RangeSetInterface
      * @param RangeInterface[] ...$rangeLists
      * @return RangeInterface[]|Generator
      * @psalm-return Generator<int,RangeInterface>
+     * @psalm-pure
      */
     private function createRangePicker(array ...$rangeLists): Generator
     {
@@ -224,6 +293,7 @@ final class RangeSet implements RangeSetInterface
      * @param RangeInterface[] $ranges
      * @param int              $index
      * @return RangeInterface|null
+     * @psalm-pure
      */
     private function selectRanges(array $ranges, int $index): ?RangeInterface
     {
@@ -234,6 +304,7 @@ final class RangeSet implements RangeSetInterface
      * @param RangeInterface|null $previousRange
      * @param RangeInterface|null $range
      * @return RangeInterface|null
+     * @psalm-pure
      */
     private function findRangeWithMinimalStart(?RangeInterface $previousRange, ?RangeInterface $range): ?RangeInterface
     {
@@ -254,6 +325,7 @@ final class RangeSet implements RangeSetInterface
      * {@inheritDoc}
      *
      * @return RangeInterface[]
+     * @psalm-pure
      */
     public function getRanges(): array
     {
@@ -264,6 +336,7 @@ final class RangeSet implements RangeSetInterface
      * {@inheritDoc}
      *
      * @return bool
+     * @psalm-pure
      */
     public function isEmpty(): bool
     {

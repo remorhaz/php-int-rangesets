@@ -6,6 +6,8 @@ namespace Remorhaz\IntRangeSets;
 
 /**
  * Immutable set of integer ranges.
+ *
+ * @psalm-immutable
  */
 interface RangeSetInterface
 {
@@ -15,6 +17,7 @@ interface RangeSetInterface
      *
      * @param RangeSetInterface $rangeSet
      * @return RangeSetInterface
+     * @psalm-pure
      */
     public function createUnion(RangeSetInterface $rangeSet): RangeSetInterface;
 
@@ -23,6 +26,7 @@ interface RangeSetInterface
      *
      * @param RangeInterface ...$ranges Order of the ranges can be arbitrary here.
      * @return RangeSetInterface
+     * @psalm-pure
      */
     public function withRanges(RangeInterface ...$ranges): RangeSetInterface;
 
@@ -31,6 +35,7 @@ interface RangeSetInterface
      *
      * @param RangeSetInterface $rangeSet
      * @return RangeSetInterface
+     * @psalm-pure
      */
     public function createSymmetricDifference(RangeSetInterface $rangeSet): RangeSetInterface;
 
@@ -39,6 +44,7 @@ interface RangeSetInterface
      *
      * @param RangeSetInterface $rangeSet
      * @return RangeSetInterface
+     * @psalm-pure
      */
     public function createIntersection(RangeSetInterface $rangeSet): RangeSetInterface;
 
@@ -47,6 +53,7 @@ interface RangeSetInterface
      *
      * @param RangeSetInterface $rangeSet
      * @return bool
+     * @psalm-pure
      */
     public function equals(RangeSetInterface $rangeSet): bool;
 
@@ -54,6 +61,7 @@ interface RangeSetInterface
      * Returns list of ranges contained in set.
      *
      * @return RangeInterface[]
+     * @psalm-pure
      */
     public function getRanges(): array;
 
@@ -61,6 +69,7 @@ interface RangeSetInterface
      * Returns TRUE if range set contains no ranges.
      *
      * @return bool
+     * @psalm-pure
      */
     public function isEmpty(): bool;
 }

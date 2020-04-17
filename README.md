@@ -60,12 +60,12 @@ Range sets are also immutable. Any operation on a set creates a new instance, le
 use Remorhaz\IntRangeSets\Range;
 use Remorhaz\IntRangeSets\RangeSet;
 
-// Empty range set
-$rangeSet1 = new RangeSet();
+// Contains single range [3..5]
+$rangeSet1 = RangeSet::create(new Range(3, 5));
 
-// Two overlapping ranges [3..5] and [4..10] are added to empty set,
-// creating a new set with single range [3..10]
-$rangeSet2 = $rangeSet1->withRanges(new Range(3, 5), new Range(4, 10));
+// Added range [4..10] partially overlaps already existing one.
+// Resulting range set contains single merged range [3..10].
+$rangeSet2 = $rangeSet1->withRanges(new Range(4, 10));
 ``` 
 
 Merging of ranges requires resources, so there's a fast, but unsafe way to initialize set with ranges. In this case constructing code must take full responsibility for normalization of ranges.
@@ -81,7 +81,16 @@ $rangeSet1 = RangeSet::createUnsafe(new Range(2, 5), new Range(7, 8));
 
 ```
 
-*WARNING:* Operations on non-normalized range sets will return incorrect results! Use `addRanges()` method with arbitrary range lists.
+*WARNING:* Operations on non-normalized range sets will return incorrect results! Use `create()` method with arbitrary range lists.
+
+### Available operations
+In all examples `$a`, `$b` and `$result` are objects implementing `\Remorhaz\IntRangeSets\RangeSetInterface`.
+
+| Operation | Formula | Example
+|---|---|--- 
+| [Union](https://en.wikipedia.org/wiki/Union_(set_theory)) | A ∪ B | `$result = $a->createUnion($b);` |
+| [Intersection](https://en.wikipedia.org/wiki/Intersection_(set_theory)) | A ∩ B | `$result = $a->createIntersection($b);` |
+| [Symmetric difference](https://en.wikipedia.org/wiki/Symmetric_difference) | A ∆ B | `$result = $a->createSymmetricDifference($b);` |
 
 # License
 This library is licensed under [MIT license](./LICENSE).
