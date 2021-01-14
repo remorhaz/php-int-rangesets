@@ -1,6 +1,9 @@
 language: php
 
-matrix:
+env:
+  - XDEBUG_MODE=coverage
+
+jobs:
   include:
     - php: '7.3'
       env: XDEBUG=YES

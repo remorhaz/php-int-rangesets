@@ -27,7 +27,7 @@
     "phpunit/phpunit": "^9.5",
     "infection/infection": "^0.18.2",
     "squizlabs/php_codesniffer": "^3.5",
-    "vimeo/psalm": "^4.3"
+    "vimeo/psalm": "^4.4"
   },
   "scripts": {
     "test-cs": "vendor/bin/phpcs -sp",
