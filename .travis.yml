@@ -6,6 +6,8 @@ matrix:
       env: XDEBUG=YES
     - php: '7.4'
       env: XDEBUG=YES
+    - php: '8.0'
+      env: XDEBUG=YES
 
 install:
   - mkdir -p ./build/logs

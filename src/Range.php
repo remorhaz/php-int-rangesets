@@ -44,7 +44,6 @@ final class Range implements RangeInterface
      * {@inheritDoc}
      *
      * @return int
-     * @psalm-pure
      */
     public function getStart(): int
     {
@@ -55,7 +54,6 @@ final class Range implements RangeInterface
      * {@inheritDoc}
      *
      * @return int
-     * @psalm-pure
      */
     public function getFinish(): int
     {
@@ -66,7 +64,6 @@ final class Range implements RangeInterface
      * {@inheritDoc}
      *
      * @return int
-     * @psalm-pure
      */
     public function getLength(): int
     {
@@ -78,7 +75,6 @@ final class Range implements RangeInterface
      *
      * @param RangeInterface $range
      * @return bool
-     * @psalm-pure
      */
     public function equals(RangeInterface $range): bool
     {
@@ -90,7 +86,6 @@ final class Range implements RangeInterface
      *
      * @param int $value
      * @return bool
-     * @psalm-pure
      */
     public function containsValue(int $value): bool
     {
@@ -102,7 +97,6 @@ final class Range implements RangeInterface
      *
      * @param RangeInterface $range
      * @return bool
-     * @psalm-pure
      */
     public function contains(RangeInterface $range): bool
     {
@@ -114,7 +108,6 @@ final class Range implements RangeInterface
      *
      * @param RangeInterface $range
      * @return bool
-     * @psalm-pure
      */
     public function intersects(RangeInterface $range): bool
     {
@@ -126,7 +119,6 @@ final class Range implements RangeInterface
      *
      * @param RangeInterface $range
      * @return bool
-     * @psalm-pure
      */
     public function follows(RangeInterface $range): bool
     {
@@ -137,7 +129,6 @@ final class Range implements RangeInterface
      * {@inheritDoc}
      *
      * @return RangeSetInterface
-     * @psalm-pure
      */
     public function asRangeSet(): RangeSetInterface
     {
@@ -149,7 +140,6 @@ final class Range implements RangeInterface
      *
      * @param int $value
      * @return RangeInterface
-     * @psalm-pure
      */
     public function withStart(int $value): RangeInterface
     {
@@ -161,7 +151,6 @@ final class Range implements RangeInterface
      *
      * @param int $value
      * @return RangeInterface
-     * @psalm-pure
      */
     public function withFinish(int $value): RangeInterface
     {
