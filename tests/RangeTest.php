@@ -13,7 +13,6 @@ use Remorhaz\IntRangeSets\Range;
  */
 class RangeTest extends TestCase
 {
-
     public function testConstruct_StartGreaterThanFinish_ThrowsException(): void
     {
         $this->expectException(InvalidRangeException::class);

@@ -13,7 +13,6 @@ use Remorhaz\IntRangeSets\Exception\InvalidRangeException;
  */
 class InvalidRangeExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new InvalidRangeException(1, 2);

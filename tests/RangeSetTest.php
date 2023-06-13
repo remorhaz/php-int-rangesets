@@ -14,10 +14,9 @@ use Remorhaz\IntRangeSets\RangeSetInterface;
  */
 class RangeSetTest extends TestCase
 {
-
     /**
-     * @param array $rangesData
-     * @param array $expectedValue
+     * @param list<list<int>> $rangesData
+     * @param list<list<int>> $expectedValue
      * @dataProvider providerCreate
      */
     public function testCreate_GivenRanges_ReturnsMatchingRangeSet(array $rangesData, array $expectedValue): void
@@ -26,7 +25,10 @@ class RangeSetTest extends TestCase
         self::assertSame($expectedValue, $this->exportRangeSet($rangeSet));
     }
 
-    public function providerCreate(): array
+    /**
+     * @return iterable<string, array{list<list<int>>, list<list<int>>}>
+     */
+    public static function providerCreate(): iterable
     {
         return [
             'No ranges' => [[], [], []],
@@ -43,9 +45,9 @@ class RangeSetTest extends TestCase
     }
 
     /**
-     * @param int[][] $rangeData
-     * @param int[][] $rangeDataToMerge
-     * @param int[][] $expectedValue
+     * @param list<list<int>> $rangeData
+     * @param list<list<int>> $rangeDataToMerge
+     * @param list<list<int>> $expectedValue
      * @dataProvider providerMergedRanges
      */
     public function testWithRanges_GivenRangeSetAndRangesToMerge_ReturnsMatchingRangeSet(
@@ -106,9 +108,9 @@ class RangeSetTest extends TestCase
     }
 
     /**
-     * @param int[][] $rangeData
-     * @param int[][] $rangeDataToMerge
-     * @param int[][] $expectedValue
+     * @param list<list<int>> $rangeData
+     * @param list<list<int>> $rangeDataToMerge
+     * @param list<list<int>> $expectedValue
      * @dataProvider providerSymmetricDifferenceRanges
      */
     public function testCreateSymmetricDifference_GivenRangeSetAndRangesToXor_ReturnsMatchingRangeSet(
@@ -123,7 +125,10 @@ class RangeSetTest extends TestCase
         self::assertSame($expectedValue, $this->exportRangeSet($symmetricDifference));
     }
 
-    public function providerSymmetricDifferenceRanges(): array
+    /**
+     * @return iterable<string, array{list<list<int>>, list<list<int>>, list<list<int>>}>
+     */
+    public static function providerSymmetricDifferenceRanges(): iterable
     {
         return [
             "Empty range" => [[[1, 2]], [], [[1, 2]]],
@@ -143,9 +148,9 @@ class RangeSetTest extends TestCase
     }
 
     /**
-     * @param int[][] $rangeData
-     * @param int[][] $rangeDataToMerge
-     * @param int[][] $expectedValue
+     * @param list<list<int>> $rangeData
+     * @param list<list<int>> $rangeDataToMerge
+     * @param list<list<int>> $expectedValue
      * @dataProvider providerIntersectionRanges
      */
     public function testCreateIntersection_GivenRangeSetAndRangesToAnd_ReturnsMatchingRangeSet(
@@ -155,7 +160,7 @@ class RangeSetTest extends TestCase
     ): void {
         $rangeSet = RangeSet::createUnsafe(...RangeSet::importRanges(...$rangeData));
         $intersection = $rangeSet->createIntersection(
-            RangeSet::createUnsafe(...RangeSet::importRanges(...$rangeDataToMerge))
+            RangeSet::createUnsafe(...RangeSet::importRanges(...$rangeDataToMerge)),
         );
         self::assertSame($expectedValue, $this->exportRangeSet($intersection));
     }
@@ -201,8 +206,8 @@ class RangeSetTest extends TestCase
     }
 
     /**
-     * @param array $firstRangesData
-     * @param array $secondRangesData
+     * @param list<list<int>> $firstRangesData
+     * @param list<list<int>> $secondRangesData
      * @dataProvider providerEqualRanges
      */
     public function testEquals_EqualRanges_ReturnsTrue(array $firstRangesData, array $secondRangesData): void
@@ -212,7 +217,10 @@ class RangeSetTest extends TestCase
         self::assertTrue($firstRangeSet->equals($secondRangeSet));
     }
 
-    public function providerEqualRanges(): array
+    /**
+     * @return iterable<string, array{list<list<int>>, list<list<int>>}>
+     */
+    public static function providerEqualRanges(): iterable
     {
         return [
             'Empty range sets' => [[], []],
@@ -222,8 +230,8 @@ class RangeSetTest extends TestCase
     }
 
     /**
-     * @param array $firstRangesData
-     * @param array $secondRangesData
+     * @param list<list<int>> $firstRangesData
+     * @param list<list<int>> $secondRangesData
      * @dataProvider providerNotEqualRanges
      */
     public function testEquals_NotEqualRanges_ReturnsFalse(array $firstRangesData, array $secondRangesData): void
@@ -233,7 +241,10 @@ class RangeSetTest extends TestCase
         self::assertFalse($firstRangeSet->equals($secondRangeSet));
     }
 
-    public function providerNotEqualRanges(): array
+    /**
+     * @return iterable<string, array{list<list<int>>, list<list<int>>}>
+     */
+    public static function providerNotEqualRanges(): iterable
     {
         return [
             'Sets with different amount of ranges' => [[[1, 2], [4, 5]], [[1, 2]]],
@@ -243,7 +254,7 @@ class RangeSetTest extends TestCase
 
     /**
      * @param RangeSetInterface $rangeSet
-     * @return int[][]
+     * @return list<list<int>>
      */
     private function exportRangeSet(RangeSetInterface $rangeSet): array
     {

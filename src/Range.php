@@ -11,16 +11,7 @@ namespace Remorhaz\IntRangeSets;
  */
 final class Range implements RangeInterface
 {
-
-    /**
-     * @var int
-     */
-    private $start;
-
-    /**
-     * @var int
-     */
-    private $finish;
+    private int $finish;
 
     /**
      * @param int      $start  First value of the range.
@@ -28,22 +19,18 @@ final class Range implements RangeInterface
      *                         equal than first value.
      * @throws Exception\InvalidRangeException
      */
-    public function __construct(int $start, ?int $finish = null)
-    {
-        if (!isset($finish)) {
-            $finish = $start;
-        } elseif ($finish < $start) {
-            throw new Exception\InvalidRangeException($start, $finish);
+    public function __construct(
+        private int $start,
+        ?int $finish = null,
+    ) {
+        $this->finish = $finish ?? $this->start;
+        if ($this->finish < $this->start) {
+            throw new Exception\InvalidRangeException($this->start, $this->finish);
         }
-
-        $this->start = $start;
-        $this->finish = $finish;
     }
 
     /**
      * {@inheritDoc}
-     *
-     * @return int
      */
     public function getStart(): int
     {
@@ -52,8 +39,6 @@ final class Range implements RangeInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @return int
      */
     public function getFinish(): int
     {
@@ -62,8 +47,6 @@ final class Range implements RangeInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @return int
      */
     public function getLength(): int
     {
@@ -72,9 +55,6 @@ final class Range implements RangeInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @param RangeInterface $range
-     * @return bool
      */
     public function equals(RangeInterface $range): bool
     {
@@ -83,9 +63,6 @@ final class Range implements RangeInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @param int $value
-     * @return bool
      */
     public function containsValue(int $value): bool
     {
@@ -94,9 +71,6 @@ final class Range implements RangeInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @param RangeInterface $range
-     * @return bool
      */
     public function contains(RangeInterface $range): bool
     {
@@ -105,9 +79,6 @@ final class Range implements RangeInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @param RangeInterface $range
-     * @return bool
      */
     public function intersects(RangeInterface $range): bool
     {
@@ -116,9 +87,6 @@ final class Range implements RangeInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @param RangeInterface $range
-     * @return bool
      */
     public function follows(RangeInterface $range): bool
     {
@@ -127,8 +95,6 @@ final class Range implements RangeInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @return RangeSetInterface
      */
     public function asRangeSet(): RangeSetInterface
     {
@@ -137,9 +103,6 @@ final class Range implements RangeInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @param int $value
-     * @return RangeInterface
      */
     public function withStart(int $value): RangeInterface
     {
@@ -148,9 +111,6 @@ final class Range implements RangeInterface
 
     /**
      * {@inheritDoc}
-     *
-     * @param int $value
-     * @return RangeInterface
      */
     public function withFinish(int $value): RangeInterface
     {

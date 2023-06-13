@@ -3,6 +3,10 @@
     totallyTyped="false"
     errorLevel="1"
     resolveFromConfigFile="true"
+    findUnusedBaselineEntry="true"
+    findUnusedCode="false"
+    findUnusedPsalmSuppress="true"
+    findUnusedVariablesAndParams="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd">
@@ -13,4 +17,7 @@
             <directory name="tests" />
         </ignoreFiles>
     </projectFiles>
+    <plugins>
+        <pluginClass class="\Psalm\PhpUnitPlugin\Plugin"/>
+    </plugins>
 </psalm>

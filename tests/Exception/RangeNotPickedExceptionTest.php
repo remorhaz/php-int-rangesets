@@ -13,7 +13,6 @@ use Remorhaz\IntRangeSets\Exception\RangeNotPickedException;
  */
 class RangeNotPickedExceptionTest extends TestCase
 {
-
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
     {
         $exception = new RangeNotPickedException();
@@ -32,7 +31,7 @@ class RangeNotPickedExceptionTest extends TestCase
         self::assertNull($exception->getPrevious());
     }
 
-    public function testGetPrevios_ConstructedWithPrevious_ReturnsSameInstance(): void
+    public function testGetPrevious_ConstructedWithPrevious_ReturnsSameInstance(): void
     {
         $previous = new Exception();
         $exception = new RangeNotPickedException($previous);

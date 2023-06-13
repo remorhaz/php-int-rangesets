@@ -9,22 +9,12 @@ use Throwable;
 
 final class InvalidRangeException extends LogicException implements ExceptionInterface
 {
-
-    /**
-     * @var int
-     */
-    private $start;
-
-    /**
-     * @var int
-     */
-    private $finish;
-
-    public function __construct(int $start, int $finish, Throwable $previous = null)
-    {
-        $this->start = $start;
-        $this->finish = $finish;
-        parent::__construct("Invalid range: [{$this->start}, {$this->finish}]", 0, $previous);
+    public function __construct(
+        private int $start,
+        private int $finish,
+        ?Throwable $previous = null,
+    ) {
+        parent::__construct("Invalid range: [$this->start, $this->finish]", 0, $previous);
     }
 
     public function getStart(): int

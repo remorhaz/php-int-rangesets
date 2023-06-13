@@ -11,12 +11,9 @@ namespace Remorhaz\IntRangeSets;
  */
 interface RangeSetInterface
 {
-
     /**
      * Returns new range set that is a union of current and given sets ($this ∪ $rangeSet).
      *
-     * @param RangeSetInterface $rangeSet
-     * @return RangeSetInterface
      * @psalm-pure
      */
     public function createUnion(RangeSetInterface $rangeSet): RangeSetInterface;
@@ -24,8 +21,6 @@ interface RangeSetInterface
     /**
      * Returns new range set with ranges merged with given ranges.
      *
-     * @param RangeInterface ...$ranges Order of the ranges can be arbitrary here.
-     * @return RangeSetInterface
      * @psalm-pure
      */
     public function withRanges(RangeInterface ...$ranges): RangeSetInterface;
@@ -33,8 +28,6 @@ interface RangeSetInterface
     /**
      * Returns new range set that is a symmetric difference of current and given sets ($this ∆ $rangeSet).
      *
-     * @param RangeSetInterface $rangeSet
-     * @return RangeSetInterface
      * @psalm-pure
      */
     public function createSymmetricDifference(RangeSetInterface $rangeSet): RangeSetInterface;
@@ -42,8 +35,6 @@ interface RangeSetInterface
     /**
      * Returns new range set that is an intersection of current and gives sets ($this ∩ $rangeSet).
      *
-     * @param RangeSetInterface $rangeSet
-     * @return RangeSetInterface
      * @psalm-pure
      */
     public function createIntersection(RangeSetInterface $rangeSet): RangeSetInterface;
@@ -51,8 +42,6 @@ interface RangeSetInterface
     /**
      * Returns TRUE if both sets contain same ranges.
      *
-     * @param RangeSetInterface $rangeSet
-     * @return bool
      * @psalm-pure
      */
     public function equals(RangeSetInterface $rangeSet): bool;
@@ -60,7 +49,7 @@ interface RangeSetInterface
     /**
      * Returns list of ranges contained in set.
      *
-     * @return RangeInterface[]
+     * @return list<RangeInterface>
      * @psalm-pure
      */
     public function getRanges(): array;
@@ -68,7 +57,6 @@ interface RangeSetInterface
     /**
      * Returns TRUE if range set contains no ranges.
      *
-     * @return bool
      * @psalm-pure
      */
     public function isEmpty(): bool;

@@ -9,8 +9,7 @@ use Throwable;
 
 final class RangeNotPickedException extends OutOfRangeException implements ExceptionInterface
 {
-
-    public function __construct(Throwable $previous = null)
+    public function __construct(?Throwable $previous = null)
     {
         parent::__construct("Failed to pick range from query", 0, $previous);
     }

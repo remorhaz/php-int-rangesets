@@ -10,7 +10,7 @@ This small library allows manipulating integer sets.
 
 # Requirements
 
-- PHP 7.3+
+- PHP 8.0, 8.1, 8.2
 
 # Installation
 
@@ -86,11 +86,11 @@ $rangeSet1 = RangeSet::createUnsafe(new Range(2, 5), new Range(7, 8));
 ### Available operations
 In all examples `$a`, `$b` and `$result` are objects implementing `\Remorhaz\IntRangeSets\RangeSetInterface`.
 
-| Operation | Formula | Example
-|---|---|--- 
-| [Union](https://en.wikipedia.org/wiki/Union_(set_theory)) | A ∪ B | `$result = $a->createUnion($b);` |
-| [Intersection](https://en.wikipedia.org/wiki/Intersection_(set_theory)) | A ∩ B | `$result = $a->createIntersection($b);` |
-| [Symmetric difference](https://en.wikipedia.org/wiki/Symmetric_difference) | A ∆ B | `$result = $a->createSymmetricDifference($b);` |
+| Operation                                                                  | Formula | Example                                        |
+|----------------------------------------------------------------------------|---------|------------------------------------------------|
+| [Union](https://en.wikipedia.org/wiki/Union_(set_theory))                  | A ∪ B   | `$result = $a->createUnion($b);`               |
+| [Intersection](https://en.wikipedia.org/wiki/Intersection_(set_theory))    | A ∩ B   | `$result = $a->createIntersection($b);`        |
+| [Symmetric difference](https://en.wikipedia.org/wiki/Symmetric_difference) | A ∆ B   | `$result = $a->createSymmetricDifference($b);` |
 
 # License
 This library is licensed under [MIT license](./LICENSE).
