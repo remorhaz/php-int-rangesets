@@ -48,7 +48,7 @@ final class RangeSet implements RangeSetInterface
     }
 
     /**
-     * @param array{int, int|null} ...$rangeDataList
+     * @param array{int, int|null}|array{int} ...$rangeDataList
      * @return list<RangeInterface>
      * @psalm-pure
      */
