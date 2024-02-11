@@ -1,6 +1,9 @@
 /vendor/
 /build/
 /composer.lock
+/tools/
+/vendor-bin/**/vendor/
+/vendor-bin/**/composer.lock
 /phpunit.xml
 /psalm.xml
 /infection.json

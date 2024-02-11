@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Remorhaz\IntRangeSets\Test\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\IntRangeSets\Exception\RangeNotPickedException;
 
-/**
- * @covers \Remorhaz\IntRangeSets\Exception\RangeNotPickedException
- */
+#[CoversClass(RangeNotPickedException::class)]
 class RangeNotPickedExceptionTest extends TestCase
 {
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void

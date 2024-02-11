@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Remorhaz\IntRangeSets\Test;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\IntRangeSets\Range;
 use Remorhaz\IntRangeSets\RangeSet;
 use Remorhaz\IntRangeSets\RangeSetInterface;
 
-/**
- * @covers \Remorhaz\IntRangeSets\RangeSet
- */
+#[CoversClass(RangeSet::class)]
 class RangeSetTest extends TestCase
 {
     /**
      * @param list<list<int>> $rangesData
      * @param list<list<int>> $expectedValue
-     * @dataProvider providerCreate
      */
+    #[DataProvider('providerCreate')]
     public function testCreate_GivenRanges_ReturnsMatchingRangeSet(array $rangesData, array $expectedValue): void
     {
         $rangeSet = RangeSet::create(...RangeSet::importRanges(...$rangesData));
@@ -48,19 +48,22 @@ class RangeSetTest extends TestCase
      * @param list<list<int>> $rangeData
      * @param list<list<int>> $rangeDataToMerge
      * @param list<list<int>> $expectedValue
-     * @dataProvider providerMergedRanges
      */
+    #[DataProvider('providerMergedRanges')]
     public function testWithRanges_GivenRangeSetAndRangesToMerge_ReturnsMatchingRangeSet(
         array $rangeData,
         array $rangeDataToMerge,
-        array $expectedValue
+        array $expectedValue,
     ): void {
         $rangeSet = RangeSet::createUnsafe(...RangeSet::importRanges(...$rangeData));
         $newRangeSet = $rangeSet->withRanges(...RangeSet::importRanges(...$rangeDataToMerge));
         self::assertSame($expectedValue, $this->exportRangeSet($newRangeSet));
     }
 
-    public function providerMergedRanges(): array
+    /**
+     * @return iterable<string, array{list<list<int>>, list<list<int>>, list<list<int>>}>
+     */
+    public static function providerMergedRanges(): iterable
     {
         return [
             'Empty range set, no ranges to merge' => [[], [], []],
@@ -111,12 +114,12 @@ class RangeSetTest extends TestCase
      * @param list<list<int>> $rangeData
      * @param list<list<int>> $rangeDataToMerge
      * @param list<list<int>> $expectedValue
-     * @dataProvider providerSymmetricDifferenceRanges
      */
+    #[DataProvider('providerSymmetricDifferenceRanges')]
     public function testCreateSymmetricDifference_GivenRangeSetAndRangesToXor_ReturnsMatchingRangeSet(
         array $rangeData,
         array $rangeDataToMerge,
-        array $expectedValue
+        array $expectedValue,
     ): void {
         $rangeSet = RangeSet::createUnsafe(...RangeSet::importRanges(...$rangeData));
         $symmetricDifference = $rangeSet->createSymmetricDifference(
@@ -151,12 +154,12 @@ class RangeSetTest extends TestCase
      * @param list<list<int>> $rangeData
      * @param list<list<int>> $rangeDataToMerge
      * @param list<list<int>> $expectedValue
-     * @dataProvider providerIntersectionRanges
      */
+    #[DataProvider('providerIntersectionRanges')]
     public function testCreateIntersection_GivenRangeSetAndRangesToAnd_ReturnsMatchingRangeSet(
         array $rangeData,
         array $rangeDataToMerge,
-        array $expectedValue
+        array $expectedValue,
     ): void {
         $rangeSet = RangeSet::createUnsafe(...RangeSet::importRanges(...$rangeData));
         $intersection = $rangeSet->createIntersection(
@@ -165,7 +168,10 @@ class RangeSetTest extends TestCase
         self::assertSame($expectedValue, $this->exportRangeSet($intersection));
     }
 
-    public function providerIntersectionRanges(): array
+    /**
+     * @return iterable<string, array{list<list<int>>, list<list<int>>, list<list<int>>}>
+     */
+    public static function providerIntersectionRanges(): iterable
     {
         return [
             "Empty range" => [[[1, 2]], [], []],
@@ -208,8 +214,8 @@ class RangeSetTest extends TestCase
     /**
      * @param list<list<int>> $firstRangesData
      * @param list<list<int>> $secondRangesData
-     * @dataProvider providerEqualRanges
      */
+    #[DataProvider('providerEqualRanges')]
     public function testEquals_EqualRanges_ReturnsTrue(array $firstRangesData, array $secondRangesData): void
     {
         $firstRangeSet = RangeSet::createUnsafe(...RangeSet::importRanges(...$firstRangesData));

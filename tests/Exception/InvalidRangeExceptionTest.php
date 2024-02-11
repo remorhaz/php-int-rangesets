@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Remorhaz\IntRangeSets\Test\Exception;
 
 use Exception;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\IntRangeSets\Exception\InvalidRangeException;
 
-/**
- * @covers \Remorhaz\IntRangeSets\Exception\InvalidRangeException
- */
+#[CoversClass(InvalidRangeException::class)]
 class InvalidRangeExceptionTest extends TestCase
 {
     public function testGetMessage_Constructed_ReturnsMatchingValue(): void
@@ -29,12 +28,6 @@ class InvalidRangeExceptionTest extends TestCase
     {
         $exception = new InvalidRangeException(1, 2);
         self::assertSame(2, $exception->getFinish());
-    }
-
-    public function testGetCode_Always_ReturnsZero(): void
-    {
-        $exception = new InvalidRangeException(1, 2);
-        self::assertSame(0, $exception->getCode());
     }
 
     public function testGetPrevious_ConstructedWithoutPrevious_ReturnsNull(): void

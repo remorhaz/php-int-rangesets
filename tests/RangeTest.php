@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Remorhaz\IntRangeSets\Test;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Remorhaz\IntRangeSets\Exception\InvalidRangeException;
 use Remorhaz\IntRangeSets\Range;
 
-/**
- * @covers \Remorhaz\IntRangeSets\Range
- */
+#[CoversClass(Range::class)]
 class RangeTest extends TestCase
 {
     public function testConstruct_StartGreaterThanFinish_ThrowsException(): void
@@ -32,22 +32,20 @@ class RangeTest extends TestCase
         self::assertSame(1, $range->getFinish());
     }
 
-    /**
-     * @param int $start
-     * @param int $finish
-     * @param int $expectedValue
-     * @dataProvider providerFinish
-     */
+    #[DataProvider('providerFinish')]
     public function testGetFinish_ConstructedWithFinish_ReturnsSameValue(
         int $start,
         int $finish,
-        int $expectedValue
+        int $expectedValue,
     ): void {
         $range = new Range($start, $finish);
         self::assertSame($expectedValue, $range->getFinish());
     }
 
-    public function providerFinish(): array
+    /**
+     * @return iterable<string, array{int, int, int}>
+     */
+    public static function providerFinish(): iterable
     {
         return [
             'Finish equals start' => [1, 1, 1],
@@ -55,19 +53,17 @@ class RangeTest extends TestCase
         ];
     }
 
-    /**
-     * @param int $start
-     * @param int $finish
-     * @param int $expectedValue
-     * @dataProvider providerLength
-     */
+    #[DataProvider('providerLength')]
     public function testGetLength_Constructed_ReturnsMatchingValue(int $start, int $finish, int $expectedValue): void
     {
         $range = new Range($start, $finish);
         self::assertSame($expectedValue, $range->getLength());
     }
 
-    public function providerLength(): array
+    /**
+     * @return iterable<string, array{int, int, int}>
+     */
+    public static function providerLength(): iterable
     {
         return [
             'Finish equals start' => [1, 1, 1],
@@ -75,24 +71,21 @@ class RangeTest extends TestCase
         ];
     }
 
-    /**
-     * @param int $firstStart
-     * @param int $firstFinish
-     * @param int $secondStart
-     * @param int $secondFinish
-     * @dataProvider providerEqualRanges
-     */
+    #[DataProvider('providerEqualRanges')]
     public function testEquals_EqualRange_ReturnsTrue(
         int $firstStart,
         int $firstFinish,
         int $secondStart,
-        int $secondFinish
+        int $secondFinish,
     ): void {
         $range = new Range($firstStart, $firstFinish);
         self::assertTrue($range->equals(new Range($secondStart, $secondFinish)));
     }
 
-    public function providerEqualRanges(): array
+    /**
+     * @return iterable<string, array{int, int, int, int}>
+     */
+    public static function providerEqualRanges(): iterable
     {
         return [
             'Start equals finish' => [1, 1, 1, 1],
@@ -100,24 +93,21 @@ class RangeTest extends TestCase
         ];
     }
 
-    /**
-     * @param int $firstStart
-     * @param int $firstFinish
-     * @param int $secondStart
-     * @param int $secondFinish
-     * @dataProvider providerNotEqualRanges
-     */
+    #[DataProvider('providerNotEqualRanges')]
     public function testEquals_NotEqualRange_ReturnsFalse(
         int $firstStart,
         int $firstFinish,
         int $secondStart,
-        int $secondFinish
+        int $secondFinish,
     ): void {
         $range = new Range($firstStart, $firstFinish);
         self::assertFalse($range->equals(new Range($secondStart, $secondFinish)));
     }
 
-    public function providerNotEqualRanges(): array
+    /**
+     * @return iterable<string, array{int, int, int, int}>
+     */
+    public static function providerNotEqualRanges(): iterable
     {
         return [
             'Different starts' => [1, 3, 2, 3],
@@ -126,19 +116,17 @@ class RangeTest extends TestCase
         ];
     }
 
-    /**
-     * @param int $start
-     * @param int $finish
-     * @param int $value
-     * @dataProvider providerContainsValue
-     */
+    #[DataProvider('providerContainsValue')]
     public function testContainsValue_ValueInRange_ReturnsTrue(int $start, int $finish, int $value): void
     {
         $range = new Range($start, $finish);
         self::assertTrue($range->containsValue($value));
     }
 
-    public function providerContainsValue(): array
+    /**
+     * @return iterable<string, array{int, int, int}>
+     */
+    public static function providerContainsValue(): iterable
     {
         return [
             'Same start, finish and value' => [1, 1, 1],
@@ -148,19 +136,17 @@ class RangeTest extends TestCase
         ];
     }
 
-    /**
-     * @param int $start
-     * @param int $finish
-     * @param int $value
-     * @dataProvider providerNotContainsValue
-     */
+    #[DataProvider('providerNotContainsValue')]
     public function testContainsValue_ValueNotInRange_ReturnsFalse(int $start, int $finish, int $value): void
     {
         $range = new Range($start, $finish);
         self::assertFalse($range->containsValue($value));
     }
 
-    public function providerNotContainsValue(): array
+    /**
+     * @return iterable<string, array{int, int, int}>
+     */
+    public static function providerNotContainsValue(): iterable
     {
         return [
             'Value before start' => [2, 3, 1],
@@ -168,20 +154,13 @@ class RangeTest extends TestCase
         ];
     }
 
-    /**
-     * @param int  $firstStart
-     * @param int  $firstEnd
-     * @param int  $secondStart
-     * @param int  $secondEnd
-     * @param bool $expectedValue
-     * @dataProvider providerIntersects
-     */
+    #[DataProvider('providerIntersects')]
     public function testIntersects_Constructed_ReturnsMatchingValue(
         int $firstStart,
         int $firstEnd,
         int $secondStart,
         int $secondEnd,
-        bool $expectedValue
+        bool $expectedValue,
     ): void {
         $firstRange = new Range($firstStart, $firstEnd);
         $secondRange = new Range($secondStart, $secondEnd);
@@ -189,7 +168,10 @@ class RangeTest extends TestCase
         self::assertSame($expectedValue, $actualValue);
     }
 
-    public function providerIntersects(): array
+    /**
+     * @return iterable<string, array{int, int, int, int, bool}>
+     */
+    public static function providerIntersects(): iterable
     {
         return [
             'Second range follows first' => [1, 2, 3, 4, false],
@@ -206,20 +188,13 @@ class RangeTest extends TestCase
         ];
     }
 
-    /**
-     * @param int  $firstStart
-     * @param int  $firstEnd
-     * @param int  $secondStart
-     * @param int  $secondEnd
-     * @param bool $expectedValue
-     * @dataProvider providerContains
-     */
+    #[DataProvider('providerContains')]
     public function testContains_Constructed_ReturnsMatchingValue(
         int $firstStart,
         int $firstEnd,
         int $secondStart,
         int $secondEnd,
-        bool $expectedValue
+        bool $expectedValue,
     ): void {
         $firstRange = new Range($firstStart, $firstEnd);
         $secondRange = new Range($secondStart, $secondEnd);
@@ -227,7 +202,10 @@ class RangeTest extends TestCase
         self::assertSame($expectedValue, $actualValue);
     }
 
-    public function providerContains(): array
+    /**
+     * @return iterable<string, array{int, int, int, bool}>
+     */
+    public static function providerContains(): iterable
     {
         return [
             'Second range follows first' => [1, 2, 3, 4, false],
@@ -244,20 +222,13 @@ class RangeTest extends TestCase
         ];
     }
 
-    /**
-     * @param int  $firstStart
-     * @param int  $firstEnd
-     * @param int  $secondStart
-     * @param int  $secondEnd
-     * @param bool $expectedValue
-     * @dataProvider providerFollows
-     */
+    #[DataProvider('providerFollows')]
     public function testFollows_Constructed_ReturnsMatchingResult(
         int $firstStart,
         int $firstEnd,
         int $secondStart,
         int $secondEnd,
-        bool $expectedValue
+        bool $expectedValue,
     ): void {
         $firstRange = new Range($firstStart, $firstEnd);
         $secondRange = new Range($secondStart, $secondEnd);
@@ -265,7 +236,10 @@ class RangeTest extends TestCase
         self::assertSame($expectedValue, $actualValue);
     }
 
-    public function providerFollows(): array
+    /**
+     * @return iterable<string, array{int, int, int, int, bool}>
+     */
+    public static function providerFollows(): iterable
     {
         return [
             'First range goes before second range' => [1, 2, 4, 5, false],

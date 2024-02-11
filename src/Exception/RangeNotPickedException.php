@@ -11,6 +11,6 @@ final class RangeNotPickedException extends OutOfRangeException implements Excep
 {
     public function __construct(?Throwable $previous = null)
     {
-        parent::__construct("Failed to pick range from query", 0, $previous);
+        parent::__construct("Failed to pick range from query", previous: $previous);
     }
 }

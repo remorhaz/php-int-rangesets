@@ -10,7 +10,7 @@ This small library allows manipulating integer sets.
 
 # Requirements
 
-- PHP 8.0, 8.1, 8.2
+- PHP 8.1, 8.2, 8.3.
 
 # Installation
 

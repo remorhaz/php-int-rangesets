@@ -10,11 +10,11 @@ use Throwable;
 final class InvalidRangeException extends LogicException implements ExceptionInterface
 {
     public function __construct(
-        private int $start,
-        private int $finish,
+        private readonly int $start,
+        private readonly int $finish,
         ?Throwable $previous = null,
     ) {
-        parent::__construct("Invalid range: [$this->start, $this->finish]", 0, $previous);
+        parent::__construct("Invalid range: [$this->start, $this->finish]", previous: $previous);
     }
 
     public function getStart(): int

@@ -20,7 +20,7 @@ final class Range implements RangeInterface
      * @throws Exception\InvalidRangeException
      */
     public function __construct(
-        private int $start,
+        private readonly int $start,
         ?int $finish = null,
     ) {
         $this->finish = $finish ?? $this->start;

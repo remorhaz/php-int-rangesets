@@ -21,36 +21,45 @@
     }
   },
   "require": {
-    "php": "~8.0 || ~8.1 || ~8.2"
+    "php": "~8.1.0 || ~8.2.0 || ~8.3.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^9.5 || ^10",
-    "infection/infection": "^0.26 || ^0.27",
-    "squizlabs/php_codesniffer": "^3.7.2",
-    "psalm/plugin-phpunit": "^0.18.4",
-    "vimeo/psalm": "^5.12"
+    "bamarni/composer-bin-plugin": "^1.8",
+    "phpunit/phpunit": "^10.1 || ^11"
   },
   "scripts": {
-    "test-cs": "vendor/bin/phpcs -sp",
+    "post-update-cmd": ["@phive-install"],
+    "post-install-cmd": ["@phive-install"],
+    "phive-install": [
+      "`if [ -f tools/phive ]; then echo 'tools/'; fi`phive install --trust-gpg-keys C5095986493B4AA0"
+    ],
+    "test-cs": "vendor-bin/cs/vendor/bin/phpcs -sp",
     "test-unit": "vendor/bin/phpunit --coverage-xml=build/logs/coverage-xml --coverage-clover=build/logs/clover.xml --log-junit=build/logs/junit.xml",
-    "test-psalm": "vendor/bin/psalm --threads=4 --shepherd",
+    "test-psalm": "vendor-bin/psalm/vendor/bin/psalm --threads=4 --shepherd",
     "test": [
       "@test-cs",
       "@test-unit",
       "@test-psalm"
     ],
     "infection": [
-      "#mkdir -p build/logs/infection",
-      "vendor/bin/infection --threads=4 --coverage=build/logs --no-progress --skip-initial-tests"
+      "mkdir -p build/logs/infection",
+      "tools/infection --threads=4 --coverage=build/logs --no-progress --skip-initial-tests"
     ],
     "test-infection": [
       "@test-unit",
-      "@test-infection"
+      "@infection"
     ]
   },
   "config": {
     "allow-plugins": {
-      "infection/*": true
+      "bamarni/composer-bin-plugin": true
+    },
+    "sort-packages": true
+  },
+  "extra": {
+    "bamarni-bin": {
+      "bin-links": false,
+      "forward-command": true
     }
   }
 }
